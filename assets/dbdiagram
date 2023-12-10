@@ -1,0 +1,69 @@
+ // Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+Table products {
+    id integer [primary key]
+    producer integer
+    title string
+}
+
+Table counterparty_products {
+  id integer [primary key]
+  counterparty integer
+  product integer
+  price float
+  amount integer
+}
+
+Table categories {
+    id integer [primary key]
+    title string
+}
+
+Table product_categories {
+    id integer [primary key]
+    product integer
+    category integer
+}
+
+Table counterparties {
+  id integer [primary key]
+  title string
+  inn string
+}
+
+Table producers {
+  id integer [primary key]
+  title string
+  inn string
+}
+
+Table customers {
+  id integer [primary key]
+  first_name string
+  second_name string
+  phone string
+}
+
+Table purchases {
+  id integer [primary key]
+  customer integer
+  created_at datetime
+  total float
+}
+
+Table purchase_products {
+  id integer [primary key]
+  amount integer
+  total float
+  purchase integer
+  counterparty_product integer
+}
+
+Ref: counterparty_products.counterparty > counterparties.id
+Ref: counterparty_products.product > products.id
+Ref: purchases.customer > customers.id
+Ref: purchase_products.purchase > purchases.id
+Ref: purchase_products.counterparty_product > counterparty_products.id
+Ref: product_categories.product > products.id
+Ref: product_categories.category > categories.id
+Ref: products.producer > producers.id
