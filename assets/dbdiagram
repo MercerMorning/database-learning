@@ -2,61 +2,61 @@
 // Docs: https://dbml.dbdiagram.io/docs
 Table products {
     id integer [primary key]
-    producer integer
-    title string
+    producer integer [not null]
+    title string [not null]
 }
 
 Table counterparty_products {
   id integer [primary key]
-  counterparty integer
-  product integer
-  price float
-  amount integer
+  counterparty integer [not null]
+  product integer [not null]
+  price float [not null]
+  amount integer [not null]
 }
 
 Table categories {
     id integer [primary key]
-    title string
+    title string [not null]
 }
 
 Table product_categories {
     id integer [primary key]
-    product integer
-    category integer
+    product integer [not null]
+    category integer [not null]
 }
 
 Table counterparties {
   id integer [primary key]
-  title string
-  inn string
+  title string [not null]
+  inn string [not null, unique]
 }
 
 Table producers {
   id integer [primary key]
-  title string
-  inn string
+  title string [not null]
+  inn string [not null, unique]
 }
 
 Table customers {
   id integer [primary key]
-  first_name string
-  second_name string
-  phone string
+  first_name string [not null]
+  second_name string [not null]
+  phone string [not null]
 }
 
 Table purchases {
   id integer [primary key]
-  customer integer
-  created_at datetime
-  total float
+  customer integer [not null]
+  created_at datetime [not null]
+  total float [not null]
 }
 
 Table purchase_products {
   id integer [primary key]
-  amount integer
-  total float
-  purchase integer
-  counterparty_product integer
+  amount integer [not null]
+  total float [not null]
+  purchase integer [not null]
+  counterparty_product integer [not null]
 }
 
 Ref: counterparty_products.counterparty > counterparties.id
