@@ -126,4 +126,10 @@
           - first_name - средняя кардинальность [not null]
           - second_name - средняя кардинальность [not null]
           - phone - высокая кардинальность [not null, regex ^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$]
-    
+
+6. Создание кластера PostgreSQL
+    - добавляем файл docker/docker-compose.yml, в котором есть директива postgres ![1](/assets/docker/1.png "1")
+    - пользователь для подключения к бд указан в конфиге ![2](/assets/docker/2.png "2")
+    - командой docker-compose up поднимаем контейнер с кластером postgres ![3](/assets/docker/3.png "3")
+    - с помощью плагина просмотра БД в idea phpstorm подключаемся к postgres ![4](/assets/docker/4.png "4")
+    - убеждамся в том что подключение прошло коррекно ![5](/assets/docker/5.png "5")
