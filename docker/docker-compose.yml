@@ -1,0 +1,10 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:15
+    ports:
+      - "5444:5432"
+    environment:
+      POSTGRES_USER: otus
+      POSTGRES_PASSWORD: otus
+      POSTGRES_DB: otus

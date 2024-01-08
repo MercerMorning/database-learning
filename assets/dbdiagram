@@ -1,0 +1,84 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+Table product {
+    id integer [primary key]
+    producer_fk integer [not null]
+    name string [not null]
+    description string [null]
+}
+
+Table basket {
+  amount integer [not null]
+  vendor_product_fk integer [not null]
+}
+
+Table review {
+  vendor_product_fk integer [not null]
+  score integer [not null]
+  review string [null]
+}
+
+Table vendor_product {
+  id integer [primary key]
+  vendor_fk integer [not null]
+  product_fk integer [not null]
+  price decimal [not null]
+  amount integer [not null]
+}
+
+Table category {
+    id integer [primary key]
+    name string [not null]
+}
+
+Table product_category {
+    id integer [primary key]
+    product_fk integer [not null]
+    category_fk integer [not null]
+}
+
+Table vendor {
+  id integer [primary key]
+  name string [not null]
+  inn string [not null, unique]
+}
+
+Table producer {
+  id integer [primary key]
+  name string [not null]
+  inn string [not null, unique]
+}
+
+Table customer {
+  id integer [primary key]
+  first_name string [not null]
+  last_name string [not null]
+  phone string [not null]
+}
+
+Table sale {
+  id integer [primary key]
+  number string [not null]
+  customer_fk integer [not null]
+  created_at datetime [not null]
+  total decimal [not null]
+}
+
+Table sale_product {
+  id integer [primary key]
+  amount integer [not null]
+  total decimal [not null]
+  sale_fk integer [not null]
+  vendor_product_fk integer [not null]
+}
+
+Ref: vendor_product.vendor_fk > vendor.id
+Ref: vendor_product.product_fk > product.id
+Ref: sale.customer_fk > customer.id
+Ref: sale_product.sale_fk > sale.id
+Ref: sale_product.vendor_product_fk > vendor_product.id
+Ref: product_category.product_fk > product.id
+Ref: product_category.category_fk > category.id
+Ref: product.producer_fk > producer.id
+Ref: basket.vendor_product_fk > vendor_product.id
+Ref: review.vendor_product_fk > vendor_product.id
