@@ -1,69 +1,84 @@
- // Use DBML to define your database structure
+// Use DBML to define your database structure
 // Docs: https://dbml.dbdiagram.io/docs
-Table products {
+Table product {
     id integer [primary key]
-    producer integer [not null]
-    title string [not null]
+    producer_fk integer [not null]
+    name string [not null]
+    description string [null]
 }
 
-Table counterparty_products {
+Table basket {
+  amount integer [not null]
+  vendor_product_fk integer [not null]
+}
+
+Table review {
+  vendor_product_fk integer [not null]
+  score integer [not null]
+  review string [null]
+}
+
+Table vendor_product {
   id integer [primary key]
-  counterparty integer [not null]
-  product integer [not null]
-  price float [not null]
+  vendor_fk integer [not null]
+  product_fk integer [not null]
+  price decimal [not null]
   amount integer [not null]
 }
 
-Table categories {
+Table category {
     id integer [primary key]
-    title string [not null]
+    name string [not null]
 }
 
-Table product_categories {
+Table product_category {
     id integer [primary key]
-    product integer [not null]
-    category integer [not null]
+    product_fk integer [not null]
+    category_fk integer [not null]
 }
 
-Table counterparties {
+Table vendor {
   id integer [primary key]
-  title string [not null]
+  name string [not null]
   inn string [not null, unique]
 }
 
-Table producers {
+Table producer {
   id integer [primary key]
-  title string [not null]
+  name string [not null]
   inn string [not null, unique]
 }
 
-Table customers {
+Table customer {
   id integer [primary key]
   first_name string [not null]
-  second_name string [not null]
+  last_name string [not null]
   phone string [not null]
 }
 
-Table purchases {
+Table sale {
   id integer [primary key]
-  customer integer [not null]
+  number string [not null]
+  customer_fk integer [not null]
   created_at datetime [not null]
-  total float [not null]
+  total decimal [not null]
 }
 
-Table purchase_products {
+Table sale_product {
   id integer [primary key]
   amount integer [not null]
-  total float [not null]
-  purchase integer [not null]
-  counterparty_product integer [not null]
+  total decimal [not null]
+  sale_fk integer [not null]
+  vendor_product_fk integer [not null]
 }
 
-Ref: counterparty_products.counterparty > counterparties.id
-Ref: counterparty_products.product > products.id
-Ref: purchases.customer > customers.id
-Ref: purchase_products.purchase > purchases.id
-Ref: purchase_products.counterparty_product > counterparty_products.id
-Ref: product_categories.product > products.id
-Ref: product_categories.category > categories.id
-Ref: products.producer > producers.id
+Ref: vendor_product.vendor_fk > vendor.id
+Ref: vendor_product.product_fk > product.id
+Ref: sale.customer_fk > customer.id
+Ref: sale_product.sale_fk > sale.id
+Ref: sale_product.vendor_product_fk > vendor_product.id
+Ref: product_category.product_fk > product.id
+Ref: product_category.category_fk > category.id
+Ref: product.producer_fk > producer.id
+Ref: basket.vendor_product_fk > vendor_product.id
+Ref: review.vendor_product_fk > vendor_product.id
