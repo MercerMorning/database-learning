@@ -1,0 +1,2 @@
+-- запрос с регулярным выражением. Поиск продуктов с определенным шаблоном имени производителя
+SELECT * from storehouse.product JOIN storehouse.producer p on p.id = product.producer_fk where storehouse.producer.name  ~ 'производитель№[0-9]+';
