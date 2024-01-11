@@ -1,0 +1,15 @@
+CREATE ROLE full_privileges_role WITH SUPERUSER LOGIN PASSWORD 'secret';
+CREATE USER full_privileges_user WITH PASSWORD 'secret' IN ROLE full_privileges_role;
+
+CREATE ROLE customer;
+CREATE USER customer_user WITH PASSWORD 'secret' IN ROLE customer;
+
+CREATE ROLE manager;
+CREATE USER manager_user WITH PASSWORD 'secret' IN ROLE manager;
+
+GRANT INSERT, DELETE, SELECT, UPDATE ON ALL TABLES IN SCHEMA sales TO customer;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO customer;
+
+GRANT INSERT, DELETE, SELECT, UPDATE ON ALL TABLES IN SCHEMA storehouse TO manager;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA storehouse TO manager;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA storehouse TO manager;
