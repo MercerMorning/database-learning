@@ -1,24 +1,15 @@
-## Схема БД
-![schema](/assets/schema.png "schema")
-
 ## Примеры бизнес-задач которые решает база
-    - Фиксация покупок товаров у определенных поставщиков
-    - Ведение наличия определенных товаров у поставщиков
-    - Возможность хранить цену товара для каждого поставщика отдельно
-    - Возможность делать расчет суммы покупки без привязки к самим товарам. Может быть полезно при расчете скидки
-    - Возможность поиска одного продукта в нескольких категориях
-    - Возможность отображать покупки конкретных покупателей
-    - Создание заказов из корзины с последующим очищением товаров из корзины (которые были заказаны)
 
-## Возможные запросы\отчеты\поиски данных
-    - поиск товаров по частичному совпадению названия
-    - поиск всех продуктов по названию определенной категории
+    - Создание и взаимодействие с отзывами и вопросами: Это важно для поддержания обратной связи с клиентами и улучшения качества продуктов и услуг. Возможность оценки полезности дополнительно помогает выявлять наиболее ценные мнения.
+    - Группировка и классификация продуктов: Это упрощает поиск и исследование товаров для пользователей, а также помогает в реализации персонализированных рекомендаций и маркетинговых стратегий.
+    - Управление каталогом продуктов: Создание продуктов с уникальными атрибутами и типами поддерживает гибкость каталога и обеспечивает лучшее понимание характеристик товаров. Иерархия категорий и типов продуктов с атрибутами улучшает навигацию и поиск.
+    - Личный кабинет пользователя: Включение функционала "Избранное", "Сравнение", управление корзиной и отслеживание заказов увеличивает удобство использования и лояльность пользователей.
+    - Логистика и возвраты: Управление адресами доставки и точками самовывоза, а также процедуры возврата товаров, важны для обеспечения гладкого процесса покупки и послепродажного обслуживания.
 
-    - отчет всех покупок пользователя за май месяц
-    - отчет цены на один и тот же товар у разных поставщиков, при условии что он есть в наличии
-    - отчет списка товаров и цены на него у разных поставщиков
-    - отчет покупателей, отсортированный по суммарному счету за все заказы
-    - отчет по всем продуктам из заказа
+## Возможные запросы/отчеты/поиск данных
+
+- получение списка товаров с их названием, изображением, средней оценкой (расчет средней оценки на основании review)
+- получение отдельной карточки товара
 
 ## Таблицы
 
@@ -26,113 +17,416 @@
 
 Товар.
 
-| Field       | Name          | Constraint  | Level cardinality | Index |
-|-------------|---------------|-------------|-------------------|-------|
-| id          | Ключ          | Primary key | high              |       |
-| producer_fk | Производитель | NOT NULL    | middle            |       |
-| name        | Название      | NOT NULL    | high              | X     |
-| description | Описание      |             | high              |       |
+| Field              | Name                   | Constraint                      | Level cardinality | Index |
+|--------------------|------------------------|---------------------------------|-------------------|-------|
+| id                 | Ключ                   |                                 | high              |       |
+| name               | Название               |                                 | high              |       |
+| type_fk            | Id типа                | REFERENCES type(id)             | middle            | x     |
+| seller_fk          | Id продавца            | REFERENCES seller(id)           | middle            | x     |
+| brand_fk           | Id брэнда              | REFERENCES brand(id)            | middle            | x     |
+| protein_count      | Кол-во белка           | CHECK (protein_count >= 0)      | high              |       |
+| fat_count          | Кол-во жиров           | CHECK (fat_count >= 0)          | high              |       |
+| carbohydrate_count | Кол-во углеводов       | CHECK (carbohydrate_count >= 0) | high              |       |
+| amount             | Кол-во товара осталось | CHECK (amount >= 0)             | high              |       |
+| description        | Описание               |                                 |                   |       |
+| storage_conditions | Условия хранения       |                                 |                   |       |
+| composition        | Состав                 |                                 |                   |       |
+| price              | Цена                   | CHECK (price >= 0)              | high              |       |
+| discount           | Скидка                 | CHECK (discount >= 0)           | high              |       |
 
-- [x] **category**
+- [x] **review_product**
 
-Категория.
+Отзыв на продукт.
 
-| Field       | Name          | Constraint  | Level cardinality | Index |
-|-------------|---------------|-------------|-------------------|-------|
-| id          | Ключ          | Primary key | high              |       |
-| name        | Название      | NOT NULL    | high              | X     |
+| Field      | Name        | Constraint             | Level cardinality | Index |
+|------------|-------------|------------------------|-------------------|-------|
+| id         | Ключ        |                        |                   |       |
+| product_fk | Id продукта | REFERENCES product(id) | middle            | x     |
+| review_fk  | Id отзыва   | REFERENCES review(id)  | middle            |       |
 
-- [x] **product_category**
+- [x] **review**
 
-Категория продукта.
+Отзыв.
 
-| Field       | Name      | Constraint  | Level cardinality | Index |
-|-------------|-----------|-------------|-------------------|-------|
-| id          | Ключ      | Primary key | high              |       |
-| product_fk  | Товар     | NOT NULL    | middle            |       |
-| category_fk | Категория | NOT NULL    | middle            |       |
+| Field         | Name                      | Constraint                              | Level cardinality | Index |
+|---------------|---------------------------|-----------------------------------------|-------------------|-------|
+| id            | Ключ                      |                                         |                   |       |
+| user_fk       | Id пользователя           | REFERENCES user(id)                     | middle            |       |
+| rating        | Отзыв                     | CHECK (rating > 0); CHECK (rating <= 5) | low               |       |
+| dignities     | Достоинства               |                                         |                   |       |
+| flaws         | Недостатки                |                                         |                   |       |
+| comment       | Комментарий               |                                         |                   |       |
+| like_count    | Сколько раз понравился    | CHECK (like_count >= 0)                 |                   |       |
+| dislike_count | Сколько раз не понравился | CHECK (dislike_count >= 0)              |                   |       |
+| created_at    | Дата создания             |                                         |                   |       |
 
-- [x] **producer**
+- [x] **gallery_review**
 
-Производитель.
+Галлерея отзыва.
 
-| Field | Name     | Constraint                  | Level cardinality | Index |
-|-------|----------|-----------------------------|-------------------|-------|
-| id    | Ключ     | Primary key                 | high              |       |
-| name  | Название | NOT NULL                    | high              | X     |
-| inn   | ИНН      | NOT NULL, LENGTH(INN) == 12 | high              | X     |
+| Field     | Name      | Constraint            | Level cardinality | Index |
+|-----------|-----------|-----------------------|-------------------|-------|
+| id        | Ключ      |                       |                   |       |
+| review_fk | Id отзыва | REFERENCES review(id) | middle            | x     |
+| priority  | Id отзыва |                       | middle            |       |
 
+- [x] **answer_review**
 
-- [x] **vendor**
+Ответ отзыва.
 
-Поставщик.
+| Field     | Name      | Constraint            | Level cardinality | Index |
+|-----------|-----------|-----------------------|-------------------|-------|
+| id        | Ключ      |                       |                   |       |
+| review_fk | Id отзыва | REFERENCES review(id) | middle            | x     |
+| answer_fk | Id ответа | REFERENCES answer(id) | high              | x     |
 
-| Field | Name     | Constraint                  | Level cardinality | Index |
-|-------|----------|-----------------------------|-------------------|-------|
-| id    | Ключ     | Primary key                 | high              |       |
-| name  | Название | NOT NULL                    | high              | X     |
-| inn   | ИНН      | NOT NULL, LENGTH(INN) == 12 | high              | X     |
+- [x] **answer**
 
-- [x] **vendor_product**
+Ответ.
 
-Продукт поставщика.
+| Field         | Name                     | Constraint                 | Level cardinality | Index |
+|---------------|--------------------------|----------------------------|-------------------|-------|
+| id            | Ключ                     |                            |                   |       |
+| user_fk       | Id пользователя          | REFERENCES user(id)        |                   | x     |
+| content       | Контент                  |                            |                   |       |
+| like_count    | Кол-во раз понравился    | CHECK (like_count >= 0)    |                   |       |
+| dislike_count | Кол-во раз не понравился | CHECK (dislike_count >= 0) |                   |       |
+| created_at    | Когда создан             |                            |                   |       |
 
-| Field      | Name       | Constraint  | Level cardinality | Index |
-|------------|------------|-------------|-------------------|-------|
-| id         | Ключ       | Primary key | high              |       |
-| vendor_fk  | Поставщик  | NOT NULL    | middle            | X     |
-| product_fk | Товар      | NOT NULL    | middle            | X     |
-| price      | Цена       | NOT NULL    |                   | X     |
-| amount     | Количество | NOT NULL    |                   |       |
+- [x] **tag_product**
 
+Тег продукта.
 
-- [x] **sale**
+| Field      | Name        | Constraint             | Level cardinality | Index |
+|------------|-------------|------------------------|-------------------|-------|
+| id         | Ключ        |                        |                   |       |
+| product_fk | Id продукта | REFERENCES product(id) | middle            |       |
+| tag_fk     | Id тега     | REFERENCES tag(id)     | middle            |       |
 
-Продажа.
+- [x] **tag**
 
-| Field       | Name                  | Constraint  | Level cardinality | Index |
-|-------------|-----------------------|-------------|-------------------|-------|
-| id          | Ключ                  | Primary key | high              |       |
-| customer_fk | Покупатель            | NOT NULL    | middle            | X     |
-| total       | Итоговая сумма        | NOT NULL    |                   | X     |
-| created_at  | Дата и время создания | NOT NULL    | middle            | X     |
+Тег.
 
-- [x] **sale_product**
+| Field           | Name                 | Constraint                                                  | Level cardinality | Index |
+|-----------------|----------------------|-------------------------------------------------------------|-------------------|-------|
+| id              | Ключ                 |                                                             |                   |       |
+| name            | Название             |                                                             | high              | x     |
+| media_file_link | Ссылка на медиа файл | media_link_format CHECK (media_file_link ~* '^https?://.*') | high              |       |
 
-Товар продажи.
+- [x] **promotion_product**
 
-| Field             | Name              | Constraint  | Level cardinality | Index |
-|-------------------|-------------------|-------------|-------------------|-------|
-| id                | Ключ              | Primary key | high              |       |
-| amount            | Количество товара | NOT NULL    |                   |       |
-| total             | Итоговая сумма    | NOT NULL    |                   |       |
-| sale_fk           | Продажа           | NOT NULL    | middle            |       |
-| vendor_product_fk | Товар поставщика  | NOT NULL    | middle            |       |
+Продукт акции.
 
-- [x] **customer**
+| Field        | Name        | Constraint               | Level cardinality | Index |
+|--------------|-------------|--------------------------|-------------------|-------|
+| id           | Ключ        |                          |                   |       |
+| product_fk   | Id продукта | REFERENCES product(id)   | middle            | x     |
+| promotion_fk | Id акции    | REFERENCES promotion(id) | middle            | x     |
 
-Покупатель.
+- [x] **promotion**
 
-| Field      | Name           | Constraint  | Level cardinality | Index |
-|------------|----------------|-------------|-------------------|-------|
-| id         | Ключ           | Primary key | high              |       |
-| first_name | Имя            | NOT NULL    | middle            |       |
-| last_name  | Фамилия        | NOT NULL    | middle            |       |
-| phone      | Номер телефона | NOT NULL    | high              |       |
+Акция.
 
+| Field | Name     | Constraint | Level cardinality | Index |
+|-------|----------|------------|-------------------|-------|
+| id    | Ключ     |            |                   |       |
+| name  | Название |            | high              | x     |
 
+- [x] **type**
 
-5. Кардинальность полей/описание индексов/ограниченияproduct, price) - составной индекс для ускоренного поиска цен на продукты у поставщиков
-    - **customers**
-        - поля:
-          - id - высокая кардинальность 
-          - first_name - средняя кардинальность [not null]
-          - second_name - средняя кардинальность [not null]
-          - phone - высокая кардинальность [not null, regex ^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$]
+Тип.
 
-## Создание кластера PostgreSQL
-    - добавляем файл docker/docker-compose.yml, в котором есть директива postgres ![1](/assets/docker/1.png "1")
-    - пользователь для подключения к бд указан в конфиге ![2](/assets/docker/2.png "2")
-    - командой docker-compose up поднимаем контейнер с кластером postgres ![3](/assets/docker/3.png "3")
-    - с помощью плагина просмотра БД в idea phpstorm подключаемся к postgres ![4](/assets/docker/4.png "4")
-    - убеждамся в том что подключение прошло коррекно ![5](/assets/docker/5.png "5")
+| Field | Name     | Constraint | Level cardinality | Index |
+|-------|----------|------------|-------------------|-------|
+| id    | Ключ     |            |                   |       |
+| name  | Название |            | high              | x     |
+
+- [x] **attribute_type**
+
+Тип аттрибута.
+
+| Field        | Name         | Constraint               | Level cardinality | Index |
+|--------------|--------------|--------------------------|-------------------|-------|
+| id           | Ключ         |                          |                   |       |
+| type_fk      | Id типа      | REFERENCES type(id)      | middle            | x     |
+| attribute_fk | Id аттрибута | REFERENCES attribute(id) | middle            | x     |
+
+- [x] **attribute**
+
+Аттрибут.
+
+| Field | Name     | Constraint | Level cardinality | Index |
+|-------|----------|------------|-------------------|-------|
+| id    | Ключ     |            |                   |       |
+| name  | Название |            | high              | x     |
+
+- [x] **filling_attribute_rule**
+
+Значение аттрибута.
+
+| Field        | Name         | Constraint               | Level cardinality | Index |
+|--------------|--------------|--------------------------|-------------------|-------|
+| id           | Ключ         |                          |                   |       |
+| attribute_fk | Id аттрибута | REFERENCES attribute(id) | middle            | x     |
+| rule_fk      | Id правила   | REFERENCES rule(id)      | middle            | x     |
+
+- [x] **rule**
+
+Правило.
+
+| Field | Name | Constraint                                                       | Level cardinality | Index |
+|-------|------|------------------------------------------------------------------|-------------------|-------|
+| id    | Ключ |                                                                  |                   |       |
+| type  | Тип  | CHECK (user_input IN ('radio', 'select', 'text', 'int', 'float') | low               |       |
+
+- [x] **brand**
+
+Бренд.
+
+| Field | Name     | Constraint | Level cardinality | Index |
+|-------|----------|------------|-------------------|-------|
+| id    | Ключ     |            |                   |       |
+| name  | Название |            | high              | x     |
+
+- [x] **product_attribute**
+
+Аттрибут продукта.
+
+| Field        | Name         | Constraint               | Level cardinality | Index |
+|--------------|--------------|--------------------------|-------------------|-------|
+| id           | Ключ         |                          |                   |       |
+| product_fk   | Id продукта  | REFERENCES product(id)   | middle            | x     |
+| attribute_fk | Id аттрибута | REFERENCES attribute(id) | middle            | x     |
+
+- [x] **question_product**
+
+Вопрос про продукт.
+
+| Field       | Name        | Constraint              | Level cardinality | Index |
+|-------------|-------------|-------------------------|-------------------|-------|
+| id          | Ключ        |                         |                   |       |
+| product_fk  | Id продукта | REFERENCES product(id)  | middle            | x     |
+| question_fk | Id вопроса  | REFERENCES question(id) | middle            | x     |
+
+- [x] **question**
+
+Вопрос.
+
+| Field      | Name                  | Constraint              | Level cardinality | Index |
+|------------|-----------------------|-------------------------|-------------------|-------|
+| id         | Ключ                  |                         |                   |       |
+| user_fk    | Id пользователя       | REFERENCES user(id)     | middle            | ч     |
+| like_count | Кол-во раз понравился | CHECK (like_count >= 0) |                   |       |
+| created_at | Дата и время создания |                         |                   |       |
+
+- [x] **answer**
+
+Ответ.
+
+| Field         | Name                     | Constraint                 | Level cardinality | Index |
+|---------------|--------------------------|----------------------------|-------------------|-------|
+| id            | Ключ                     |                            |                   |       |
+| question_fk   | Id вопроса               | REFERENCES question(id)    | middle            | x     |
+| user_fk       | Id пользователя          | REFERENCES user(id)        | middle            | x     |
+| content       | Контент                  |                            |                   |       |
+| like_count    | Кол-во раз понравился    | CHECK (like_count >= 0)    |                   |       |
+| dislike_count | Кол-во раз не понравился | CHECK (dislike_count >= 0) |                   |       |
+
+- [x] **seller**
+
+Продавец.
+
+| Field | Name     | Constraint | Level cardinality | Index |
+|-------|----------|------------|-------------------|-------|
+| id    | Ключ     |            |                   |       |
+| name  | Название |            | high              | x     |
+
+- [x] **gallery_product**
+
+Продавец.
+
+| Field           | Name                 | Constraint                                 | Level cardinality | Index |
+|-----------------|----------------------|--------------------------------------------|-------------------|-------|
+| id              | Ключ                 |                                            |                   |       |
+| product_fk      | Id продукта          | REFERENCES product(id)                     | middle            | x     |
+| attribute_fk    | Id аттрибута         | REFERENCES attribute(id)                   | middle            | x     |
+| media_file_link | Ссылка на медиа файл | CHECK (media_file_link ~* '^https?://.*'); |                   |       | 
+
+- [x] **product_attribute_value**
+
+Значение аттрибута продукта.
+
+| Field           | Name               | Constraint               | Level cardinality | Index |
+|-----------------|--------------------|--------------------------|-------------------|-------|
+| id              | Ключ               |                          |                   |       |
+| product_fk      | Id продукта        | REFERENCES product(id)   | middle            | x     |
+| attribute_fk    | Id аттрибута       | REFERENCES attribute(id) | middle            | x     |
+| attribute_value | Значение аттрибута |                          | high              | x     | 
+
+- [x] **user**
+
+Пользователь.
+
+| Field         | Name       | Constraint                                                          | Level cardinality | Index |
+|---------------|------------|---------------------------------------------------------------------|-------------------|-------|
+| id            | Ключ       |                                                                     |                   |       |
+| email         | Email      | CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') | high              |       |
+| password_hash | Хэш пароля |                                                                     |                   |       |
+| password_hash | Хэш пароля |                                                                     |                   |       |
+| basket_fk     | Корзина    | REFERENCES basket(id)                                               |                   |       |
+
+- [x] **contact**
+
+Контакт.
+
+| Field   | Name            | Constraint          | Level cardinality | Index |
+|---------|-----------------|---------------------|-------------------|-------|
+| id      | Ключ            |                     |                   |       |
+| user_fk | Id пользователя | REFERENCES user(id) | high              | x     |
+| name    | Имя             |                     |                   |       |
+| surname | Фамилия         |                     |                   |       |
+
+- [x] **favorite**
+
+Избранное.
+
+| Field      | Name            | Constraint             | Level cardinality | Index |
+|------------|-----------------|------------------------|-------------------|-------|
+| id         | Ключ            |                        |                   |       |
+| user_fk    | Id пользователя | REFERENCES user(id)    | middle            | x     |
+| product_fk | Id продукта     | REFERENCES product(id) | middle            | x     |
+
+- [x] **сomparison**
+
+Сравнение.
+
+| Field      | Name            | Constraint             | Level cardinality | Index |
+|------------|-----------------|------------------------|-------------------|-------|
+| id         | Ключ            |                        |                   |       |
+| user_fk    | Id пользователя | REFERENCES user(id)    | middle            | x     |
+| product_fk | Id продукта     | REFERENCES product(id) | middle            | x     |
+
+- [x] **address_delivery**
+
+Адрес доставки.
+
+| Field            | Name            | Constraint                              | Level cardinality | Index |
+|------------------|-----------------|-----------------------------------------|-------------------|-------|
+| id               | Ключ            |                                         |                   |       |
+| user_fk          | Id пользователя | REFERENCES user(id)                     | middle            | x     |
+| address          | Адрес           |                                         |                   |       |
+| index            | Индекс          |                                         |                   |       |
+| apartment_number | Номер квартиры  |                                         |                   |       |
+| level            | Этаж            | CHECK (level > 0); CHECK (level <= 100) |                   |       |
+| intercom         | Домофон         |                                         |                   |       |
+| comment          | Комментарий     |                                         |                   |       |
+
+- [x] **basket**
+
+Корзина.
+
+| Field | Name | Constraint | Level cardinality | Index |
+|-------|------|------------|-------------------|-------|
+| id    | Ключ |            |                   |       |
+
+- [x] **basket_product**
+
+Продукт корзины.
+
+| Field      | Name        | Constraint             | Level cardinality | Index |
+|------------|-------------|------------------------|-------------------|-------|
+| id         | Ключ        |                        |                   |       |
+| basket_fk  | Id корзины  | REFERENCES basket(id)  |                   | x     |
+| product_fk | Id продукта | REFERENCES product(id) |                   | x     |
+| amount     | Кол-во      | CHECK (amount >= 0)    |                   |       |
+
+- [x] **pickup_point**
+
+Точка самовывоза.
+
+| Field          | Name          | Constraint                                              | Level cardinality | Index |
+|----------------|---------------|---------------------------------------------------------|-------------------|-------|
+| id             | Ключ          |                                                         |                   |       |
+| address        | Адрес         |                                                         |                   |       |
+| delivery_hours | Часы доставки | CHECK (delivery_hours ~* '^\d{2}:\d{2} - \d{2}:\d{2}$') |                   |       |
+
+- [x] **order**
+
+Заказ.
+
+| Field             | Name                  | Constraint                                                        | Level cardinality | Index |
+|-------------------|-----------------------|-------------------------------------------------------------------|-------------------|-------|
+| id                | Ключ                  |                                                                   |                   |       |
+| serial_number     | Серийный номер        |                                                                   |                   |       |
+| user_fk           | Id пользователя       | REFERENCES user(id)                                               |                   | x     |
+| delivery_datetime | Дата и время доставки |                                                                   |                   |       |
+| status            | Статус                | CHECK (delivery_status IN ('ON_WAY', 'DELIVERED', 'WAIT_CONFIRM') |                   |       |
+| grade             | Оценка                | CHECK (amount >= 0); CHECK (amount <= 5)                          |                   |       |
+| name_reciever     | Имя получателя        |                                                                   |                   |       |
+| phone_reciever    | Номер получателя      | CHECK (phone_number ~* '^\(\d{3}\) \d{3}-\d{4}$')                 |                   |       |
+
+- [x] **order_product**
+
+Продукт заказа.
+
+| Field      | Name        | Constraint                                                        | Level cardinality | Index |
+|------------|-------------|-------------------------------------------------------------------|-------------------|-------|
+| id         | Ключ        |                                                                   |                   |       |
+| order_fk   | Id заказа   | REFERENCES order(id)                                              | middle            | x     |
+| product_fk | Id продукта | REFERENCES product(id)                                            | middle            | x     |
+| price      | Цена        | CHECK (price >= 0)                                                |                   |       |
+| amount     | Кол-во      | CHECK (amount >= 0)                                               |                   |       |
+| discount   | Скидка      | CHECK (discount >= 0)                                             |                   |       |
+| status     | Статус      | CHECK (delivery_status IN ('ON_WAY', 'DELIVERED', 'WAIT_CONFIRM') | low               |       |
+
+- [x] **delivery**
+
+Доставка.
+
+| Field               | Name               | Constraint                                            | Level cardinality | Index |
+|---------------------|--------------------|-------------------------------------------------------|-------------------|-------|
+| id                  | Ключ               |                                                       |                   |       |
+| order_fk            | Id заказа          | REFERENCES order(id)                                  | middle            | x     |
+| delivery_method     | Метод доставки     | CHECK (delivery_status IN ('COURIER', 'PICKUP_POINT') |                   |       |
+| address_delivery_fk | Id адреса доставки | REFERENCES address_delivery(id)                       |                   |       |
+| grade               | Оценка             | CHECK (grade >= 0); CHECK (grade <= 0)                |                   |       |
+
+- [x] **refund**
+
+Возврат.
+
+| Field     | Name       | Constraint                                                 | Level cardinality | Index |
+|-----------|------------|------------------------------------------------------------|-------------------|-------|
+| id        | Ключ       |                                                            |                   |       |
+| order_fk  | Id заказа  | REFERENCES order(id)                                       | high              | x     |
+| status    | Статус     | CHECK (delivery_status IN ('CONFIRMED', 'WAIT', 'REFUSED') | low               |       |
+| reason_fk | Id причины | REFERENCES reason(id)                                      |                   | x     |
+
+- [x] **refund_product**
+
+Продукт возврата.
+
+| Field      | Name        | Constraint             | Level cardinality | Index |
+|------------|-------------|------------------------|-------------------|-------|
+| id         | Ключ        |                        |                   |       |
+| refund_fk  | Id возврата | REFERENCES refund(id)  | middle            | x     |
+| product_fk | Id продукта | REFERENCES product(id) | middle            | x     |
+
+- [x] **reason**
+
+Причина.
+
+| Field   | Name        | Constraint | Level cardinality | Index |
+|---------|-------------|------------|-------------------|-------|
+| id      | Ключ        |            |                   |       |
+| comment | Комментарий |            |                   |       |
+
+- [x] **gallery_reason**
+
+Причина.
+
+| Field           | Name                 | Constraint                                 | Level cardinality | Index |
+|-----------------|----------------------|--------------------------------------------|-------------------|-------|
+| id              | Ключ                 |                                            |                   |       |
+| reason_fk       | Id причины           | REFERENCES reason(id)                      | middle            |       |
+| media_file_link | Ссылка на медиа файл | CHECK (media_file_link ~* '^https?://.*'); |                   |       |

@@ -2,6 +2,7 @@ Table user {
   id int [pk]
   email varchar
   password_hash varchar
+  basket_fk int [ref: > basket.id]
 }
 
 Table product {
@@ -14,7 +15,7 @@ Table product {
   fat_count decimal
   carbohydrate_count decimal
   amount int
-  description text
+  description varchar
   storage_conditions text
   composition text
   price decimal
@@ -36,17 +37,6 @@ Table brand {
   name varchar
 }
 
-Table category {
-  id int [pk]
-  name varchar
-  parent_category int [ref: > category.id]
-}
-
-Table category_product {
-  id int [pk]
-  category_fk int [ref: > category.id]
-  product_fk int [ref: > product.id]
-}
 
 Table tag {
   id int [pk]
@@ -122,9 +112,11 @@ Table gallery_review {
 Table answer {
   id int [pk]
   user_fk int [ref: > user.id]
+  question_fk int [ref: > question.id]
   content text
   like_count int
   dislike_count int
+  created_at string
 }
 
 Table answer_review {
@@ -146,12 +138,6 @@ Table question_product {
   question_fk int [ref: > question.id]
 }
 
-Table question_answer {
-  id int [pk]
-  question_fk int [ref: > question.id]
-  answer_fk int [ref: > answer.id]
-}
-
 Table address_delivery {
   id int [pk]
   user_fk int [ref: > user.id]
@@ -167,7 +153,6 @@ Table address_delivery {
 
 Table basket {
   id int [pk]
-  user_fk int [ref: > user.id]
 }
 
 Table basket_product {
@@ -185,6 +170,7 @@ Table pickup_point {
 
 Table order {
   id int [pk]
+  serial_number varchar
   user_fk int [ref: > user.id]
   delivery_datetime datetime
   status varchar
