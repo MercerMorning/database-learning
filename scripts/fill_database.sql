@@ -15,7 +15,7 @@ INSERT INTO ozon.brand (name) VALUES ('ElectroBrand'), ('FashionBrand'), ('FoodB
 
 -- Заполнение таблицы product
 INSERT INTO ozon.product (name, type_fk, seller_fk, brand_fk, protein_count, fat_count, carbohydrate_count, amount, description, storage_conditions, composition, price, discount) VALUES
-                                                                                                                                                                                       ('Smartphone', 1, 1, 1, 0, 0, 0, 30, 'Latest model smartphone with high performance', 'Store at room temperature', 'Electronics', 500.00, 0.10),
+                                                                                                                                                                                       ('Iphone 10', 1, 1, 1, 0, 0, 0, 30, 'Latest model smartphone with high performance', 'Store at room temperature', 'Electronics', 500.00, 0.10),
                                                                                                                                                                                        ('Jeans', 2, 2, 2, 0, 0, 0, 50, 'Comfortable blue jeans', 'Keep dry and avoid direct sunlight', 'Denim', 40.00, 0.05),
                                                                                                                                                                                        ('Organic Milk', 3, 3, 3, 3.4, 3.6, 4.7, 100, 'Fresh organic milk from local farms', 'Keep refrigerated', 'Milk', 2.50, 0.00);
 
@@ -136,7 +136,7 @@ INSERT INTO ozon.gallery_reason (reason_fk, media_file_link) VALUES
 
 -- Заполнение таблицы basket_product
 INSERT INTO ozon.basket_product (basket_fk, product_fk, amount) VALUES
-                                                                    (1, 1, 1),
+                                                                    (1, 1, 30),
                                                                     (1, 2, 2);
 
 -- Заполнение таблицы question_product
