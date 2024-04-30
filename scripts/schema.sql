@@ -421,3 +421,18 @@ CREATE INDEX idx_question_product ON ozon.question_product(product_fk);
 
 -- Помните, что индексы следует создавать осознанно, так как они ускоряют чтение данных, но могут замедлить операции записи.
 
+ALTER TABLE ozon.product ADD COLUMN tsvector_product_name__brand_name tsvector;
+
+CREATE INDEX search_index_product_name__brand_name on ozon.product USING GIN (tsvector_product_name__brand_name);
+
+CREATE FUNCTION product_trigger() RETURNS trigger AS $$
+BEGIN
+    NEW.tsvector_product_name__brand_name :=
+        to_tsvector('english', NEW.name || ' ' || (select name from ozon.brand where id = NEW.brand_fk LIMIT 1));
+RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tsvectorupdate BEFORE INSERT OR UPDATE
+                                                   ON ozon.product FOR EACH ROW EXECUTE FUNCTION product_trigger();
+
