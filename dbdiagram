@@ -1,0 +1,257 @@
+Table user {
+  id int [pk]
+  email varchar
+  password_hash varchar
+  basket_fk int [ref: > basket.id]
+}
+
+Table product {
+  id int [pk]
+  name varchar
+  type_fk int [ref: > type.id]
+  seller_fk int [ref: > seller.id]
+  brand_fk int [ref: > brand.id]
+  protein_count decimal
+  fat_count decimal
+  carbohydrate_count decimal
+  amount int
+  description varchar
+  storage_conditions text
+  composition text
+  price decimal
+  discount decimal
+}
+
+Table type {
+  id int [pk]
+  name varchar
+}
+
+Table seller {
+  id int [pk]
+  name varchar
+}
+
+Table brand {
+  id int [pk]
+  name varchar
+}
+
+
+Table tag {
+  id int [pk]
+  name varchar
+  media_file_link varchar
+}
+
+Table tag_product {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  tag_fk int [ref: > tag.id]
+}
+
+Table promotion {
+  id int [pk]
+  name varchar
+}
+
+Table promotion_product {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  promotion_fk int [ref: > promotion.id]
+}
+
+Table attribute {
+  id int [pk]
+  name varchar
+}
+
+Table attribute_type {
+  id int [pk]
+  type_fk int [ref: > type.id]
+  attribute_fk int [ref: > attribute.id]
+}
+
+Table product_attribute {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  attribute_fk int [ref: > attribute.id]
+}
+
+Table product_attribute_value {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  attribute_fk int [ref: > attribute.id]
+  attribute_value varchar
+}
+
+Table review {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  rating int
+  dignities text
+  flaws text
+  comment text
+  like_count int
+  dislike_count int
+  created_at datetime
+}
+
+Table review_product {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  review_fk int [ref: > review.id]
+}
+
+Table gallery_review {
+  id int [pk]
+  review_fk int [ref: > review.id]
+  priority int
+}
+
+Table answer {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  question_fk int [ref: > question.id]
+  content text
+  like_count int
+  dislike_count int
+  created_at string
+}
+
+Table answer_review {
+  id int [pk]
+  review_fk int [ref: > review.id]
+  answer_fk int [ref: > answer.id]
+}
+
+Table question {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  like_count int
+  created_at datetime
+}
+
+Table question_product {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  question_fk int [ref: > question.id]
+}
+
+Table address_delivery {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  address text
+  index varchar
+  apartment_number int
+  level int
+  intercom varchar
+  comment text
+  name_reciever varchar
+  phone_reciever varchar
+}
+
+Table basket {
+  id int [pk]
+}
+
+Table basket_product {
+  id int [pk]
+  basket_fk int [ref: > basket.id]
+  product_fk int [ref: > product.id]
+  amount int
+}
+
+Table pickup_point {
+  id int [pk]
+  address varchar
+  delivery_hours varchar
+}
+
+Table order {
+  id int [pk]
+  serial_number varchar
+  user_fk int [ref: > user.id]
+  delivery_datetime datetime
+  status varchar
+  grade int
+}
+
+Table order_product {
+  id int [pk]
+  order_fk int [ref: > order.id]
+  product_fk int [ref: > product.id]
+  price decimal
+  amount int
+  discount decimal
+  status varchar
+}
+
+Table delivery {
+  id int [pk]
+  order_fk int [ref: > order.id]
+  delivery_method varchar
+  address_delivery_fk int [ref: > address_delivery.id]
+  grade int
+}
+
+Table refund {
+  id int [pk]
+  order_fk int [ref: > order.id]
+  status varchar
+  reason_fk int [ref: > reason.id]
+}
+
+Table refund_product {
+  id int [pk]
+  refund_fk int [ref: > refund.id]
+  product_fk int [ref: > product.id]
+}
+
+Table reason {
+  id int [pk]
+  comment text
+}
+
+Table gallery_product {
+  id int [pk]
+  product_fk int [ref: > product.id]
+  attribute_fk int [ref: > attribute.id]
+  media_file_link varchar
+}
+
+Table gallery_reason {
+  id int [pk]
+  reason_fk int [ref: > reason.id]
+  media_file_link varchar
+}
+
+Table contact {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  name varchar
+  surname varchar
+}
+
+Table favorite {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  product_fk int [ref: > product.id]
+}
+
+Table comparison {
+  id int [pk]
+  user_fk int [ref: > user.id]
+  product_fk int [ref: > product.id]
+}
+
+Table rule {
+  id int [pk]
+  type varchar
+}
+
+Table filling_attribute_rule {
+  id int [pk]
+  attribute_fk int [ref: > attribute.id]
+  rule_fk int [ref: > rule.id]
+}
