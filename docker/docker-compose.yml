@@ -27,6 +27,20 @@ services:
       - db-network
     depends_on:
       - postgres
+  postgres_logical:
+    build: ./logical
+    ports:
+      - "5445:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: otus
+      POSTGRES_DB: otus
+      MASTER_HOST: postgres
+      PGPASSWORD: otus
+    networks:
+      - db-network
+    depends_on:
+      - postgres
 networks:
   db-network:
     driver: bridge
