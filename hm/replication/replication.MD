@@ -11,8 +11,11 @@
 - просмотрел кластеры на реплике:
     ![img_3.png](img_3.png)
 - меняем wal level ```alter system set wal_level = replica;```:
+- создаем слот репликации ```select * from pg_create_physical_replication_slot('main');```
 - просмотр записей таблицы statistic на мастере ```select * from statistic```: 
   ![img_4.png](img_4.png)
+- все необходимые настройки реплики:
+  ![replica_conf.png](replica_conf.png)
 - просмотр записей таблицы statistic на реплике ```select * from statistic```:
   ![img_4.png](img_5.png)
 - добавляем запись в мастер ```insert into statistic VALUES ('test raw', 123, 123, 22.0)```:

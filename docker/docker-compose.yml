@@ -13,22 +13,8 @@ services:
     volumes:
       - './master/postgresql.conf:/var/lib/postgresql/data/postgresql.conf'
       - './master/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf'
-#  postgres_replica:
-#    build: ./replica
-#    ports:
-#      - "5445:5432"
-#    environment:
-#      POSTGRES_USER: postgres
-#      POSTGRES_PASSWORD: otus
-#      POSTGRES_DB: otus
-#      MASTER_HOST: postgres
-#      PGPASSWORD: otus
-#    networks:
-#      - db-network
-#    depends_on:
-#      - postgres
-  postgres_logical:
-    build: ./logical
+  postgres_replica:
+    build: ./replica
     ports:
       - "5445:5432"
     environment:
@@ -41,6 +27,20 @@ services:
       - db-network
     depends_on:
       - postgres
+#  postgres_logical:
+#    build: ./logical
+#    ports:
+#      - "5445:5432"
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: otus
+#      POSTGRES_DB: otus
+#      MASTER_HOST: postgres
+#      PGPASSWORD: otus
+#    networks:
+#      - db-network
+#    depends_on:
+#      - postgres
 networks:
   db-network:
     driver: bridge
